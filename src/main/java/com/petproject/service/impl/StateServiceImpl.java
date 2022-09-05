@@ -1,38 +1,65 @@
 package com.petproject.service.impl;
 
+
+import com.petproject.exception.NullEntityReferenceException;
 import com.petproject.model.State;
+import com.petproject.repository.StateRepository;
 import com.petproject.service.StateService;
+import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+@Service
 public class StateServiceImpl implements StateService {
+    private StateRepository stateRepository;
+
+    public StateServiceImpl(StateRepository stateRepository) {
+        this.stateRepository = stateRepository;
+    }
+
     @Override
-    public State create(State state) {
-        return null;
+    public State create(State role) {
+        if (role != null) {
+            return stateRepository.save(role);
+        }
+        throw new NullEntityReferenceException("State cannot be 'null'");
     }
 
     @Override
     public State readById(long id) {
-        return null;
+        return stateRepository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("State with id " + id + " not found"));
     }
 
     @Override
-    public State update(State state) {
-        return null;
+    public State update(State role) {
+        if (role != null) {
+            readById(role.getId());
+            return stateRepository.save(role);
+        }
+        throw new NullEntityReferenceException("State cannot be 'null'");
     }
 
     @Override
     public void delete(long id) {
-
+        stateRepository.delete(readById(id));
     }
 
     @Override
     public State getByName(String name) {
-        return null;
+        Optional<State> optional = Optional.ofNullable(stateRepository.findByName(name));
+        if (optional.isPresent()) {
+            return optional.get();
+        }
+        throw new EntityNotFoundException("State with name '" + name + "' not found");
     }
 
     @Override
     public List<State> getAll() {
-        return null;
+        List<State> states = stateRepository.getAll();
+        return states.isEmpty() ? new ArrayList<>() : states;
     }
 }
