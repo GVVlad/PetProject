@@ -28,30 +28,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         this.userDetailsServiceImpl = userDetailsServiceImpl;
     }
 
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-//        http.csrf()
-//                .disable()
-//                .authorizeRequests()
-//                .antMatchers( "/login-form","/users/create").permitAll()
-//                .anyRequest()
-//                .authenticated()
-//                .and()
-//                .formLogin()
-//                .loginPage("/login-form")
-//                .loginProcessingUrl("/login-form")
-//                .defaultSuccessUrl("/home")
-//                .failureUrl("/login-form?error=true")
-//                .permitAll()
-//                .and()
-//                .logout()
-//                .logoutUrl("/logout")
-//                .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"))
-//                .clearAuthentication(true)
-//                .invalidateHttpSession(true)
-//                .deleteCookies("JSESSIONID")
-//                .logoutSuccessUrl("/login-form");
         http.csrf()
                     .disable()
                     .authorizeRequests()
@@ -67,13 +45,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .permitAll()
                 .and()
                     .logout()
-                    .logoutRequestMatcher(new AntPathRequestMatcher("/logout","GET"))
+                    .logoutUrl("/logout")
+                    .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"))
                     .clearAuthentication(true)
                     .invalidateHttpSession(true)
                     .deleteCookies("JSESSIONID")
                     .logoutSuccessUrl("/login-form")
                 .and()
-                    .exceptionHandling().accessDeniedPage("/403");
+                .exceptionHandling().accessDeniedPage("/error");
+
     }
 
     @Override
@@ -87,5 +67,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         provider.setPasswordEncoder(passwordEncoder);
         provider.setUserDetailsService(userDetailsServiceImpl);
         return provider;
-    }
-}
+    }}

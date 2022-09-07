@@ -17,6 +17,7 @@
         <div class="form-group">
             <label class="control-label" for="title">Title:</label>
             <input class="form-control" type="text" th:field="*{title}" id="title" th:value="*{title}"/>
+            <small class="form-text text-muted" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></small>
         </div>
         <input class="btn btn-info" type="submit" value="Update"/>
         <input class="btn btn" type="reset" value="Clear"/>
