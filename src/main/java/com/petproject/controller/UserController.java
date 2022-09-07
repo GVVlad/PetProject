@@ -36,7 +36,6 @@ public class UserController {
         user.setRole(roleService.readById(2));
         var newUser = userService.create(user);
 
-        //return "redirect:/users/all";
         return "redirect:/todos/all/users/" + newUser.getId();
     }
 

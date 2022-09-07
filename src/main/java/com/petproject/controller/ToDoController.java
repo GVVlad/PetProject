@@ -75,11 +75,6 @@ public class ToDoController {
     public String update(@PathVariable("todo_id") long todoId, @PathVariable("owner_id") long ownerId,
                          @Validated @ModelAttribute("todo") ToDo todo, BindingResult result) {
         if (result.hasErrors()) {
-/*
-            todo.setOwner(userService.readById(ownerId));
-            return "update-todo";
-*/
-
             throw new NullEntityReferenceException("Error while updating ToDo, try to check your input data");
         }
         ToDo oldTodo = todoService.readById(todoId);
