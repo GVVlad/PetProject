@@ -15,7 +15,7 @@ public class HomeController {
 
     @GetMapping({"/", "home"})
     public String home() {
-        return "users-list";
+        return "redirect:/users/all";
 
     }
 }
