@@ -3,6 +3,8 @@ package com.petproject.controller;
 import com.petproject.model.User;
 import com.petproject.service.RoleService;
 import com.petproject.service.UserService;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -22,6 +24,7 @@ public class UserController {
     }
 
     @GetMapping("/create")
+    @PreAuthorize("!hasAuthority('USER')")
     public String create(Model model) {
         model.addAttribute("user", new User());
 
@@ -29,6 +32,7 @@ public class UserController {
     }
 
     @PostMapping("/create")
+    @PostAuthorize("!hasAuthority('USER')")
     public String create(@Validated @ModelAttribute("user") User user, BindingResult result) {
         if (result.hasErrors()) {
             return "create-user";
@@ -40,6 +44,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}/read")
+    @PreAuthorize("hasAuthority('ADMIN') or #id == authentication.principal.id")
     public String read(@PathVariable long id,Model model){
         var user = userService.readById(id);
         model.addAttribute("user",user);
@@ -82,12 +87,14 @@ public class UserController {
     }
 
     @GetMapping("/{id}/delete")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public String delete(@PathVariable long id){
         userService.delete(id);
         return "redirect:/users/all";
     }
 
     @GetMapping("/all")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public String getAll(Model model){
         model.addAttribute("users",userService.getAll());
         return "users-list";
